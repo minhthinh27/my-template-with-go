@@ -1,0 +1,16 @@
+server:
+  env:
+    mode: DEVELOP # or PRODUCTION
+  http:
+    address: 8000
+    timeout: 10 # seconds
+
+cache:
+  redis:
+    host: "localhost"
+    port: "6379"
+    password: ""
+    db: 0
+
+timer:
+  zone: "UTC"
