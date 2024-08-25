@@ -12,5 +12,23 @@ cache:
     password: ""
     db: 0
 
+database:
+  main:
+    host: "localhost"
+    port: "3306"
+    db_name: "gd"
+    username: "root"
+    password: "123456789"
+    max_con: 64
+    max_idle_con: 32
+  slave:
+    host: "localhost"
+    port: "3306"
+    db_name: "gd"
+    username: "root"
+    password: "123456789"
+    max_con: 64
+    max_idle_con: 32
+
 timer:
   zone: "UTC"

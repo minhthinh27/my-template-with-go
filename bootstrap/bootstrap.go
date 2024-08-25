@@ -6,9 +6,10 @@ import (
 )
 
 type Config struct {
-	Server Server
-	Cache  Cache
-	Timer  Timer
+	Server   Server
+	Database Database
+	Cache    Cache
+	Timer    Timer
 }
 
 func InitConfig(configPath string) (Config, error) {

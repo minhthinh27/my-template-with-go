@@ -3,8 +3,8 @@ package container
 import (
 	"context"
 	"github.com/redis/go-redis/v9"
+	"go.uber.org/zap"
 	"my-template-with-go/bootstrap"
-	"my-template-with-go/logger"
 )
 
 type IRedisProvider interface {
@@ -15,13 +15,9 @@ type redisProvider struct {
 	redisClient *redis.Client
 }
 
-func NewRedis(
-	config bootstrap.Cache,
-	zap logger.ILogger,
-) (IRedisProvider, func(), error) {
+func NewRedis(config bootstrap.Cache, sugar *zap.SugaredLogger) (IRedisProvider, func(), error) {
 	var (
 		data    = &redisProvider{}
-		sugar   = zap.GetZapLogger()
 		cfRedis = config.Redis
 	)
 
@@ -29,7 +25,6 @@ func NewRedis(
 		if data != nil && data.GetClient() != nil {
 			data.GetClient().Close()
 		}
-
 		sugar.Info("closing the data resources")
 	}
 
