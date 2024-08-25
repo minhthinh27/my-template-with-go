@@ -29,7 +29,7 @@ func NewRedis(config bootstrap.Cache, sugar *zap.SugaredLogger) (IRedisProvider,
 	}
 
 	if cfRedis.GetHost() != "" {
-		redisClient, err := data.connectRedis(cfRedis)
+		redisClient, err := connectRedis(cfRedis)
 		if err != nil {
 			return data, cleanup, err
 		} else {
@@ -40,7 +40,7 @@ func NewRedis(config bootstrap.Cache, sugar *zap.SugaredLogger) (IRedisProvider,
 	return data, cleanup, nil
 }
 
-func (p *redisProvider) connectRedis(cfRedis bootstrap.Redis) (*redis.Client, error) {
+func connectRedis(cfRedis bootstrap.Redis) (*redis.Client, error) {
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     cfRedis.GetHost() + ":" + cfRedis.GetPort(),
 		Password: cfRedis.GetPassword(),

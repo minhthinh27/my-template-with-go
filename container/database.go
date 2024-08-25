@@ -46,7 +46,7 @@ func NewDatabase(config bootstrap.Database, sugar *zap.SugaredLogger) (IDataBase
 	}
 
 	if cfMain.GetHost() != "" {
-		mainDB, err := data.connectMain(cfMain)
+		mainDB, err := connectMain(cfMain)
 		if err != nil {
 			return data, cleanup, err
 		} else {
@@ -55,7 +55,7 @@ func NewDatabase(config bootstrap.Database, sugar *zap.SugaredLogger) (IDataBase
 	}
 
 	if cfSlave.GetHost() != "" {
-		slaveDB, err := data.connectSlave(cfSlave)
+		slaveDB, err := connectSlave(cfSlave)
 		if err != nil {
 			return data, cleanup, err
 		} else {
@@ -66,7 +66,7 @@ func NewDatabase(config bootstrap.Database, sugar *zap.SugaredLogger) (IDataBase
 	return data, cleanup, nil
 }
 
-func (p *databaseProvider) connectMain(cf bootstrap.Main) (*gorm.DB, error) {
+func connectMain(cf bootstrap.Main) (*gorm.DB, error) {
 	dsnParams := "?charset=utf8mb4" + "&" +
 		"collation=utf8mb4_unicode_ci" + "&" +
 		"parseTime=True" + "&" +
@@ -114,7 +114,7 @@ func (p *databaseProvider) connectMain(cf bootstrap.Main) (*gorm.DB, error) {
 	return db, nil
 }
 
-func (p *databaseProvider) connectSlave(cf bootstrap.Slave) (*gorm.DB, error) {
+func connectSlave(cf bootstrap.Slave) (*gorm.DB, error) {
 	dsnParams := "?charset=utf8mb4" + "&" +
 		"collation=utf8mb4_unicode_ci" + "&" +
 		"parseTime=True" + "&" +
