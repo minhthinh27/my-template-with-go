@@ -8,12 +8,12 @@ import (
 
 type IContainerProvider interface {
 	RedisProvider() IRedisProvider
-	DatabaseProvider() IDataBaseProvider
+	DatabaseProvider() IDatabaseProvider
 }
 
 type containerProvider struct {
 	redisProvider    IRedisProvider
-	databaseProvider IDataBaseProvider
+	databaseProvider IDatabaseProvider
 }
 
 func NewContainer(cf bootstrap.Config, zap logger.ILogger) (IContainerProvider, error) {
@@ -28,7 +28,7 @@ func NewContainer(cf bootstrap.Config, zap logger.ILogger) (IContainerProvider, 
 	return provider, nil
 }
 
-func buildDatabase(cf bootstrap.Config, sugar *zap.SugaredLogger) IDataBaseProvider {
+func buildDatabase(cf bootstrap.Config, sugar *zap.SugaredLogger) IDatabaseProvider {
 	database, cleanup, err := NewDatabase(cf.Database, sugar)
 	if err != nil {
 		cleanup()
@@ -52,6 +52,6 @@ func (p containerProvider) RedisProvider() IRedisProvider {
 	return p.redisProvider
 }
 
-func (p containerProvider) DatabaseProvider() IDataBaseProvider {
+func (p containerProvider) DatabaseProvider() IDatabaseProvider {
 	return p.databaseProvider
 }

@@ -1,4 +1,4 @@
-package nlcron
+package nl_cron
 
 type ICronApp interface {
 	Start() error

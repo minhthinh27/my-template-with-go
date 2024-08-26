@@ -10,23 +10,23 @@ cache:
     host: "localhost"
     port: "6379"
     password: ""
-    db: 0
+    db: 1
 
 database:
   main:
     host: "localhost"
-    port: "3306"
-    db_name: "gd"
-    username: "root"
-    password: "123456789"
+    port: "5432"
+    db_name: "gorilladesk"
+    username: "admin"
+    password: "admin"
     max_con: 64
     max_idle_con: 32
   slave:
     host: "localhost"
-    port: "3306"
-    db_name: "gd"
-    username: "root"
-    password: "123456789"
+    port: "5432"
+    db_name: "gorilladesk"
+    username: "admin"
+    password: "admin"
     max_con: 64
     max_idle_con: 32
 

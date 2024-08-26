@@ -2,8 +2,9 @@ package container
 
 import (
 	"errors"
+	"fmt"
 	"go.uber.org/zap"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"my-template-with-go/bootstrap"
@@ -13,7 +14,7 @@ import (
 	"time"
 )
 
-type IDataBaseProvider interface {
+type IDatabaseProvider interface {
 	GetDBMain() *gorm.DB
 	GetDBSlave() *gorm.DB
 }
@@ -23,7 +24,7 @@ type databaseProvider struct {
 	dbSlave *gorm.DB
 }
 
-func NewDatabase(config bootstrap.Database, sugar *zap.SugaredLogger) (IDataBaseProvider, func(), error) {
+func NewDatabase(config bootstrap.Database, sugar *zap.SugaredLogger) (IDatabaseProvider, func(), error) {
 	var (
 		data    = &databaseProvider{}
 		cfMain  = config.Main
@@ -67,19 +68,14 @@ func NewDatabase(config bootstrap.Database, sugar *zap.SugaredLogger) (IDataBase
 }
 
 func connectMain(cf bootstrap.Main) (*gorm.DB, error) {
-	dsnParams := "?charset=utf8mb4" + "&" +
-		"collation=utf8mb4_unicode_ci" + "&" +
-		"parseTime=True" + "&" +
-		"interpolateParams=True" + "&" +
-		"readTimeout=10s" + "&" +
-		"timeout=10s" + "&" +
-		"writeTimeout=10s"
 
-	dsn := cf.GetUserName() + ":" + cf.GetPassword() +
-		"@tcp(" + cf.GetHost() + ":" + cf.GetPort() + ")/" +
-		cf.GetName() + dsnParams
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=UTC",
+		cf.GetHost(), cf.GetUserName(), cf.GetPassword(), cf.GetName(), cf.GetPort())
 
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+	db, err := gorm.Open(postgres.New(postgres.Config{
+		DSN:                  dsn,
+		PreferSimpleProtocol: true,
+	}), &gorm.Config{
 		SkipDefaultTransaction:                   true,
 		DryRun:                                   false,
 		PrepareStmt:                              true,
@@ -94,6 +90,7 @@ func connectMain(cf bootstrap.Main) (*gorm.DB, error) {
 			Colorful:                  true,
 		}),
 	})
+
 	if err != nil {
 		return nil, err
 	}
@@ -115,19 +112,14 @@ func connectMain(cf bootstrap.Main) (*gorm.DB, error) {
 }
 
 func connectSlave(cf bootstrap.Slave) (*gorm.DB, error) {
-	dsnParams := "?charset=utf8mb4" + "&" +
-		"collation=utf8mb4_unicode_ci" + "&" +
-		"parseTime=True" + "&" +
-		"interpolateParams=True" + "&" +
-		"readTimeout=10s" + "&" +
-		"timeout=10s" + "&" +
-		"writeTimeout=10s"
 
-	dsn := cf.GetUserName() + ":" + cf.GetPassword() +
-		"@tcp(" + cf.GetHost() + ":" + cf.GetPort() + ")/" +
-		cf.GetName() + dsnParams
+	dsn := fmt.Sprintf("host= %s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=UTC",
+		cf.GetHost(), cf.GetUserName(), cf.GetPassword(), cf.GetName(), cf.GetPort())
 
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+	db, err := gorm.Open(postgres.New(postgres.Config{
+		DSN:                  dsn,
+		PreferSimpleProtocol: true,
+	}), &gorm.Config{
 		SkipDefaultTransaction:                   true,
 		DryRun:                                   false,
 		PrepareStmt:                              true,
@@ -142,6 +134,7 @@ func connectSlave(cf bootstrap.Slave) (*gorm.DB, error) {
 			Colorful:                  true,
 		}),
 	})
+
 	if err != nil {
 		return nil, err
 	}

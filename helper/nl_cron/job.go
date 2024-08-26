@@ -1,4 +1,4 @@
-package nlcron
+package nl_cron
 
 import (
 	"context"
@@ -30,7 +30,7 @@ func NewCronJob(name string, timer string, timezone string, callback func(), sug
 		sugar.Error(err)
 	}
 
-	cron := cron.New(
+	cronN := cron.New(
 		cron.WithSeconds(),
 		cron.WithLocation(loc),
 	)
@@ -42,7 +42,7 @@ func NewCronJob(name string, timer string, timezone string, callback func(), sug
 	}
 
 	timer = formatTimer(timer)
-	_, err := cron.AddFunc(timer, callLog)
+	_, err := cronN.AddFunc(timer, callLog)
 	if err != nil {
 		sugar.Error(err)
 		return nil
@@ -53,7 +53,7 @@ func NewCronJob(name string, timer string, timezone string, callback func(), sug
 		schedule: timer,
 		callback: callLog,
 		sugar:    sugar,
-		cron:     cron,
+		cron:     cronN,
 	}
 }
 

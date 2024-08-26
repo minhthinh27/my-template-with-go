@@ -15,11 +15,11 @@ func (p *Database) GetMain() *Main {
 type Main struct {
 	Host       string
 	Port       string
-	Name       string
+	DBName     string `mapstructure:"db_name"`
 	Username   string
 	Password   string
-	MaxCon     int
-	MaxIdleCon int
+	MaxCon     int `mapstructure:"max_con"`
+	MaxIdleCon int `mapstructure:"max_idle_con"`
 }
 
 func (p *Main) GetHost() string {
@@ -40,7 +40,7 @@ func (p *Main) GetName() string {
 	if p == nil {
 		return ""
 	}
-	return p.Name
+	return p.DBName
 }
 
 func (p *Main) GetUserName() string {
@@ -81,11 +81,11 @@ func (p *Database) GetSlave() *Slave {
 type Slave struct {
 	Host       string
 	Port       string
-	Name       string
+	DBName     string `mapstructure:"db_name"`
 	Username   string
 	Password   string
-	MaxCon     int
-	MaxIdleCon int
+	MaxCon     int `mapstructure:"max_con"`
+	MaxIdleCon int `mapstructure:"max_idle_con"`
 }
 
 func (p *Slave) GetHost() string {
@@ -106,7 +106,7 @@ func (p *Slave) GetName() string {
 	if p == nil {
 		return ""
 	}
-	return p.Name
+	return p.DBName
 }
 
 func (p *Slave) GetUserName() string {
