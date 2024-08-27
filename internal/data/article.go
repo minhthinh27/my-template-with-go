@@ -87,7 +87,7 @@ func (d *articleRepo) Delete(ids []uint) error {
 	return tx.Delete(&entity.Article{}, ids).Error
 }
 
-func NewLinkRepo(db container.IDatabaseProvider) IArticleRepo {
+func NewArticleRepo(db container.IDatabaseProvider) IArticleRepo {
 	return &articleRepo{
 		db: db,
 	}

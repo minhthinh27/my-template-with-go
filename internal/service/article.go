@@ -12,7 +12,7 @@ type IArticleCtl interface {
 	List(ctx echo.Context) error
 	Detail(ctx echo.Context) error
 	Create(ctx echo.Context) error
-	Update(ctx echo.Context) error
+	Edit(ctx echo.Context) error
 	Delete(ctx echo.Context) error
 }
 
@@ -56,7 +56,7 @@ func (s *articleCtl) Create(ctx echo.Context) error {
 	return ctx.JSON(http.StatusCreated, nil)
 }
 
-func (s *articleCtl) Update(ctx echo.Context) error {
+func (s *articleCtl) Edit(ctx echo.Context) error {
 	idUri := &uri.IDUri{}
 	if err := ctx.Bind(idUri); err != nil {
 		return ctx.JSON(http.StatusBadRequest, err.Error())
@@ -67,7 +67,7 @@ func (s *articleCtl) Update(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	if err := s.uc.Update(idUri.ID, req); err != nil {
+	if err := s.uc.Edit(idUri.ID, req); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
 

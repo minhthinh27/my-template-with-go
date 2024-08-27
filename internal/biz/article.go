@@ -1,6 +1,7 @@
 package biz
 
 import (
+	"fmt"
 	"my-template-with-go/internal/data"
 	"my-template-with-go/internal/model"
 	"my-template-with-go/request"
@@ -8,15 +9,21 @@ import (
 )
 
 type IArticleUC interface {
+	Sync()
+
 	List() (interface{}, error)
 	Detail(id uint) (interface{}, error)
 	Create(jBody *request.ArticleCreateReq) error
-	Update(id uint, jBody *request.ArticleUpdateReq) error
+	Edit(id uint, jBody *request.ArticleUpdateReq) error
 	Delete(jBody *request.ArticleDeleteReq) error
 }
 
 type articleUC struct {
 	repo data.IArticleRepo
+}
+
+func (b *articleUC) Sync() {
+	fmt.Println("article sync")
 }
 
 func (b *articleUC) List() (interface{}, error) {
@@ -69,7 +76,7 @@ func (b *articleUC) Create(jBody *request.ArticleCreateReq) error {
 	return nil
 }
 
-func (b *articleUC) Update(id uint, jBody *request.ArticleUpdateReq) error {
+func (b *articleUC) Edit(id uint, jBody *request.ArticleUpdateReq) error {
 	var (
 		updateItems = map[string]interface{}{}
 	)
@@ -95,6 +102,6 @@ func (b *articleUC) Delete(jBody *request.ArticleDeleteReq) error {
 	return b.repo.Delete(jBody.IDs)
 }
 
-func NewLinkUseCase(repo data.IArticleRepo) IArticleUC {
+func NewArticleUseCase(repo data.IArticleRepo) IArticleUC {
 	return &articleUC{repo: repo}
 }
