@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/labstack/echo/v4"
+	"github.com/gin-gonic/gin"
 	"log"
 	"my-template-with-go/bootstrap"
 	"my-template-with-go/container"
@@ -43,7 +43,7 @@ func main() {
 	run(router, sugar, config.Server)
 }
 
-func run(engine *echo.Echo, zap logger.ILogger, cf bootstrap.Server) {
+func run(engine *gin.Engine, zap logger.ILogger, cf bootstrap.Server) {
 	var (
 		sugar   = zap.GetZapLogger()
 		timeOut = time.Duration(cf.Http.Timeout) * time.Second

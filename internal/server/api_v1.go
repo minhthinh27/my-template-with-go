@@ -1,12 +1,12 @@
 package server
 
 import (
-	"github.com/labstack/echo/v4"
+	"github.com/gin-gonic/gin"
 	"my-template-with-go/internal/service"
 )
 
 func setupArticleRouter(
-	router *echo.Echo,
+	router *gin.Engine,
 	ctl service.IArticleCtl,
 ) {
 	articleGroup := router.Group("/api/v1/article")
