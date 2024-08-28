@@ -46,7 +46,7 @@ func NewDatabase(config bootstrap.Database, sugar *zap.SugaredLogger) (IDatabase
 		sugar.Info("closing the data resources")
 	}
 
-	if cfMain.GetHost() != "" {
+	if cfMain.Host != "" {
 		mainDB, err := connectMain(cfMain)
 		if err != nil {
 			return data, cleanup, err
@@ -55,7 +55,7 @@ func NewDatabase(config bootstrap.Database, sugar *zap.SugaredLogger) (IDatabase
 		}
 	}
 
-	if cfSlave.GetHost() != "" {
+	if cfSlave.Host != "" {
 		slaveDB, err := connectSlave(cfSlave)
 		if err != nil {
 			return data, cleanup, err
@@ -70,7 +70,7 @@ func NewDatabase(config bootstrap.Database, sugar *zap.SugaredLogger) (IDatabase
 func connectMain(cf bootstrap.Main) (*gorm.DB, error) {
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=UTC",
-		cf.GetHost(), cf.GetUserName(), cf.GetPassword(), cf.GetName(), cf.GetPort())
+		cf.Host, cf.Username, cf.Password, cf.DBName, cf.Port)
 
 	db, err := gorm.Open(postgres.New(postgres.Config{
 		DSN:                  dsn,
@@ -99,8 +99,8 @@ func connectMain(cf bootstrap.Main) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	sqlDB.SetMaxIdleConns(cf.GetMaxIdleCon())
-	sqlDB.SetMaxOpenConns(cf.GetMaxCon())
+	sqlDB.SetMaxIdleConns(cf.MaxIdleCon)
+	sqlDB.SetMaxOpenConns(cf.MaxCon)
 	sqlDB.SetConnMaxLifetime(2 * time.Minute)
 	sqlDB.SetConnMaxLifetime(3 * time.Minute)
 
@@ -114,7 +114,7 @@ func connectMain(cf bootstrap.Main) (*gorm.DB, error) {
 func connectSlave(cf bootstrap.Slave) (*gorm.DB, error) {
 
 	dsn := fmt.Sprintf("host= %s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=UTC",
-		cf.GetHost(), cf.GetUserName(), cf.GetPassword(), cf.GetName(), cf.GetPort())
+		cf.Host, cf.Username, cf.Password, cf.DBName, cf.Port)
 
 	db, err := gorm.Open(postgres.New(postgres.Config{
 		DSN:                  dsn,
@@ -143,8 +143,8 @@ func connectSlave(cf bootstrap.Slave) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	sqlDB.SetMaxIdleConns(cf.GetMaxIdleCon())
-	sqlDB.SetMaxOpenConns(cf.GetMaxCon())
+	sqlDB.SetMaxIdleConns(cf.MaxIdleCon)
+	sqlDB.SetMaxOpenConns(cf.MaxCon)
 	sqlDB.SetConnMaxLifetime(2 * time.Minute)
 	sqlDB.SetConnMaxLifetime(3 * time.Minute)
 

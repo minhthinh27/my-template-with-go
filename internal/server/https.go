@@ -16,7 +16,7 @@ func Router(container container.IContainerProvider, cf bootstrap.Config) (*echo.
 	router.Use(middleware.Recover())
 	Cors(router)
 
-	if cf.Server.GetEnv().GetMode() != "PRODUCTION" {
+	if cf.Server.Env.Mode != "PRODUCTION" {
 		router.Use(middleware.Logger())
 	}
 

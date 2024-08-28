@@ -33,11 +33,11 @@ func InitLogger(config bootstrap.Config) (ILogger, error) {
 
 func build(config bootstrap.Config) (*zap.Logger, error) {
 	var (
-		env = config.Server.GetEnv()
+		env = config.Server.Env
 	)
 
 	zapLogger, err := zap.NewDevelopment()
-	if env.GetMode() == "PRODUCTION" {
+	if env.Mode == "PRODUCTION" {
 		zapLogger, err = zap.NewProduction()
 	}
 
