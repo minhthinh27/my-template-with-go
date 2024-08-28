@@ -28,7 +28,7 @@ func NewRedis(config bootstrap.Cache, sugar *zap.SugaredLogger) (IRedisProvider,
 		sugar.Info("closing the data resources")
 	}
 
-	if cfRedis.GetHost() != "" {
+	if cfRedis.Host != "" {
 		redisClient, err := connectRedis(cfRedis)
 		if err != nil {
 			return data, cleanup, err
@@ -42,9 +42,9 @@ func NewRedis(config bootstrap.Cache, sugar *zap.SugaredLogger) (IRedisProvider,
 
 func connectRedis(cfRedis bootstrap.Redis) (*redis.Client, error) {
 	redisClient := redis.NewClient(&redis.Options{
-		Addr:     cfRedis.GetHost() + ":" + cfRedis.GetPort(),
-		Password: cfRedis.GetPassword(),
-		DB:       cfRedis.GetDB(),
+		Addr:     cfRedis.Host + ":" + cfRedis.Port,
+		Password: cfRedis.Password,
+		DB:       cfRedis.Db,
 	})
 
 	_, err := redisClient.Ping(context.Background()).Result()

@@ -17,7 +17,7 @@ func NewMailBoxCron(
 	articleSync biz.IArticleUC,
 ) (IArticleCron, func(), error) {
 	var (
-		zone  = cf.Timer.GetZone()
+		zone  = cf.Timer.Zone
 		sugar = zap.GetZapLogger()
 	)
 
