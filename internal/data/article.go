@@ -26,7 +26,7 @@ func (d *articleRepo) List() ([]*entity.Article, error) {
 	)
 
 	if err := tx.Model(&entity.Article{}).
-		Find(result).Error; err != nil {
+		Find(&result).Error; err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		}
@@ -58,7 +58,11 @@ func (d *articleRepo) Create(item *entity.Article) error {
 		tx = d.db.GetDBMain()
 	)
 
-	return tx.Create(item).Error
+	if err := tx.Create(item).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (d *articleRepo) Update(id uint, items map[string]interface{}) error {
@@ -69,11 +73,7 @@ func (d *articleRepo) Update(id uint, items map[string]interface{}) error {
 	if err := tx.Model(&entity.Article{}).
 		Where("id = ?", id).
 		Updates(items).Error; err != nil {
-	}
-
-	if tx.RowsAffected == 0 {
-		tx.Rollback()
-		return errors.New("article not found")
+		return err
 	}
 
 	return nil

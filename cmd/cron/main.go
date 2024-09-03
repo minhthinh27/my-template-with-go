@@ -51,7 +51,7 @@ func run(app nl_cron.ICronApp, cf bootstrap.Config, zap logger.ILogger) {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	<-sigs
 	sugar.Infof("[Shutdown Server]")
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(cf.Server.GetHttp().GetTimeout())*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(cf.Server.Http.Timeout)*time.Second)
 	defer cancel()
 
 	ctx.Done()
