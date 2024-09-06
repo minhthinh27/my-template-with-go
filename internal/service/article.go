@@ -6,6 +6,7 @@ import (
 	"my-template-with-go/request"
 	"my-template-with-go/request/uri"
 	"net/http"
+	"strconv"
 )
 
 type IArticleCtl interface {
@@ -57,17 +58,18 @@ func (s *articleCtl) Create(ctx echo.Context) error {
 }
 
 func (s *articleCtl) Edit(ctx echo.Context) error {
-	idUri := &uri.IDUri{}
-	if err := ctx.Bind(idUri); err != nil {
-		return ctx.JSON(http.StatusBadRequest, err.Error())
-	}
-
 	req := &request.ArticleUpdateReq{}
 	if err := ctx.Bind(req); err != nil {
 		return ctx.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	if err := s.uc.Edit(idUri.ID, req); err != nil {
+	id := ctx.Param("id")
+	u64, err := strconv.ParseUint(id, 10, 32)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	if err := s.uc.Edit(uint(u64), req); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
 

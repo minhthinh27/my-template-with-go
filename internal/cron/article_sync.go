@@ -23,7 +23,7 @@ func NewMailBoxCron(
 
 	callback := func() { articleSync.Sync() }
 
-	result := nl_cron.NewCronJob("article", "*/1 * * * *", zone, callback, sugar)
+	result := nl_cron.NewCronJob("article", "*/10 * * * * *", zone, callback, sugar)
 	return result, func() {
 		sugar.Info("closing the document nl_cron job")
 		result.Stop()

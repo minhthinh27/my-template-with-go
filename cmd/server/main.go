@@ -8,6 +8,7 @@ import (
 	"log"
 	"my-template-with-go/bootstrap"
 	"my-template-with-go/container"
+	"my-template-with-go/internal/migration"
 	"my-template-with-go/internal/server"
 	"my-template-with-go/logger"
 	"net/http"
@@ -32,6 +33,10 @@ func main() {
 
 	provider, err := container.NewContainer(config, sugar)
 	if err != nil {
+		sugar.GetZapLogger().Fatal(err)
+	}
+
+	if err = migration.AutoMigrate(provider.DatabaseProvider().GetDBMain()); err != nil {
 		sugar.GetZapLogger().Fatal(err)
 	}
 
