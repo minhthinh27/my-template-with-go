@@ -3,8 +3,8 @@ package biz
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"my-template-with-go/internal/data"
 	"my-template-with-go/internal/model"
+	"my-template-with-go/internal/repo"
 	"my-template-with-go/request"
 	"my-template-with-go/response"
 )
@@ -20,8 +20,8 @@ type IArticleUC interface {
 }
 
 type articleUC struct {
-	articleRepo data.IArticleRepo
-	userRepo    data.IUserRepo
+	articleRepo repo.IArticleRepo
+	userRepo    repo.IUserRepo
 }
 
 func (b *articleUC) Sync() {
@@ -122,7 +122,7 @@ func (b *articleUC) Delete(jBody *request.ArticleDeleteReq) error {
 	return b.articleRepo.Delete(jBody.IDs)
 }
 
-func NewArticleUseCase(articleRepo data.IArticleRepo, userRepo data.IUserRepo) IArticleUC {
+func NewArticleUseCase(articleRepo repo.IArticleRepo, userRepo repo.IUserRepo) IArticleUC {
 	return &articleUC{
 		articleRepo: articleRepo,
 		userRepo:    userRepo,

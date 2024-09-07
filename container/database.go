@@ -43,7 +43,7 @@ func NewDatabase(config bootstrap.Database, sugar *zap.SugaredLogger) (IDatabase
 				sqlDB.Close()
 			}
 		}
-		sugar.Info("closing the data resources")
+		sugar.Info("closing the repo resources")
 	}
 
 	if cfMain.Host != "" {

@@ -1,4 +1,4 @@
-package service
+package controller
 
 import (
 	"github.com/labstack/echo/v4"

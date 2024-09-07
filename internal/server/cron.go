@@ -6,7 +6,7 @@ import (
 	"my-template-with-go/helper/nl_cron"
 	"my-template-with-go/internal/biz"
 	"my-template-with-go/internal/cron"
-	"my-template-with-go/internal/data"
+	"my-template-with-go/internal/repo"
 	"my-template-with-go/logger"
 )
 
@@ -15,7 +15,7 @@ func NewCRONServer(
 	zap logger.ILogger,
 	cf bootstrap.Config,
 ) (nl_cron.ICronApp, func(), error) {
-	articleRepo := data.NewArticleRepo(provider.DatabaseProvider())
+	articleRepo := repo.NewArticleRepo(provider.DatabaseProvider())
 	articleUseCase := biz.NewArticleUseCase(articleRepo, nil)
 
 	articleCron, cleanup, err := cron.NewMailBoxCron(cf, zap, articleUseCase)
