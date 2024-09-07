@@ -1,6 +1,7 @@
 package biz
 
 import (
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"my-template-with-go/internal/entity"
@@ -48,10 +49,10 @@ func TestArticleUC_List(t *testing.T) {
 	mockRepo.On("List").Return(articles, nil)
 
 	// Create the use case with the mock repository
-	uc := NewArticleUseCase(mockRepo)
+	uc := NewArticleUseCase(mockRepo, nil)
 
 	// Call the List method
-	result, err := uc.List()
+	result, err := uc.List(echo.New().NewContext(nil, nil))
 
 	// Assert the result
 	assert.NoError(t, err)

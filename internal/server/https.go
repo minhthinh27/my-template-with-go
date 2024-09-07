@@ -20,8 +20,10 @@ func Router(container container.IContainerProvider, cf bootstrap.Config) (*echo.
 		router.Use(middleware.Logger())
 	}
 
+	userRepo := data.NewUserRepo(container.DatabaseProvider())
+
 	articleRepo := data.NewArticleRepo(container.DatabaseProvider())
-	articleUC := biz.NewArticleUseCase(articleRepo)
+	articleUC := biz.NewArticleUseCase(articleRepo, userRepo)
 	articleCtl := service.NewArticleService(articleUC)
 
 	setupArticleRouter(router, articleCtl)

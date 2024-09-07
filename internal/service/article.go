@@ -22,7 +22,7 @@ type articleCtl struct {
 }
 
 func (s *articleCtl) List(ctx echo.Context) error {
-	articles, err := s.uc.List()
+	articles, err := s.uc.List(ctx)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
