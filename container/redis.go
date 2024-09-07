@@ -25,7 +25,7 @@ func NewRedis(config bootstrap.Cache, sugar *zap.SugaredLogger) (IRedisProvider,
 		if data != nil && data.GetClient() != nil {
 			data.GetClient().Close()
 		}
-		sugar.Info("closing the data resources")
+		sugar.Info("closing the repo resources")
 	}
 
 	if cfRedis.Host != "" {

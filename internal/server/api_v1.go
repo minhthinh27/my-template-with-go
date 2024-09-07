@@ -2,12 +2,12 @@ package server
 
 import (
 	"github.com/labstack/echo/v4"
-	"my-template-with-go/internal/service"
+	"my-template-with-go/internal/controller"
 )
 
 func setupArticleRouter(
 	router *echo.Echo,
-	ctl service.IArticleCtl,
+	ctl controller.IArticleCtl,
 ) {
 	articleGroup := router.Group("/api/v1/article")
 	{

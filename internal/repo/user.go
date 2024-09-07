@@ -1,4 +1,4 @@
-package data
+package repo
 
 import (
 	"my-template-with-go/container"

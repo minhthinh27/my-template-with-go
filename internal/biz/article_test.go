@@ -39,7 +39,7 @@ func TestArticleUC_List(t *testing.T) {
 	// Create a mock repository
 	mockRepo := new(MockArticleRepo)
 
-	// Create some fake data
+	// Create some fake repo
 	articles := []*entity.Article{
 		{ID: 1, Title: "Test Title 1", Author: "Test Author 1"},
 		{ID: 2, Title: "Test Title 2", Author: "Test Author 2"},
