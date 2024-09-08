@@ -24,7 +24,7 @@ func Router(container container.IContainerProvider, cf bootstrap.Config) (*echo.
 
 	articleRepo := repo.NewArticleRepo(container.DatabaseProvider())
 	articleUC := biz.NewArticleUseCase(articleRepo, userRepo)
-	articleCtl := controller.NewArticleService(articleUC)
+	articleCtl := controller.NewArticleCtl(articleUC)
 
 	setupArticleRouter(router, articleCtl)
 

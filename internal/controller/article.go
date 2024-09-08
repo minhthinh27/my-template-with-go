@@ -89,7 +89,7 @@ func (s *articleCtl) Delete(ctx echo.Context) error {
 	return ctx.JSON(http.StatusAccepted, nil)
 }
 
-func NewArticleService(uc biz.IArticleUC) IArticleCtl {
+func NewArticleCtl(uc biz.IArticleUC) IArticleCtl {
 	return &articleCtl{
 		uc: uc,
 	}
