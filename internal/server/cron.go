@@ -3,7 +3,7 @@ package server
 import (
 	"my-template-with-go/bootstrap"
 	"my-template-with-go/container"
-	"my-template-with-go/helper/nl_cron"
+	"my-template-with-go/helper/gdcron"
 	"my-template-with-go/internal/biz"
 	"my-template-with-go/internal/cron"
 	"my-template-with-go/internal/repo"
@@ -14,7 +14,7 @@ func NewCRONServer(
 	provider container.IContainerProvider,
 	zap logger.ILogger,
 	cf bootstrap.Config,
-) (nl_cron.ICronApp, func(), error) {
+) (gdcron.ICronApp, func(), error) {
 	articleRepo := repo.NewArticleRepo(provider.DatabaseProvider())
 	articleUseCase := biz.NewArticleUseCase(articleRepo, nil)
 
@@ -24,7 +24,7 @@ func NewCRONServer(
 		return nil, nil, err
 	}
 
-	app := nl_cron.NewCronApplication()
+	app := gdcron.NewCronApplication()
 	app.Register(articleCron)
 
 	cleanApp := func() {

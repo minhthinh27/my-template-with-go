@@ -1,0 +1,34 @@
+server:
+  env:
+    mode: DEVELOP
+  http:
+    address: 8000
+    timeout: 10
+
+cache:
+  redis:
+    host: "localhost"
+    port: "6379"
+    password: ""
+    db: 0
+
+database:
+  main:
+    host: "localhost"
+    port: "5432"
+    db_name: "gorilladesk"
+    username: "admin"
+    password: "admin"
+    max_con: 64
+    max_idle_con: 32
+  slave:
+    host: "localhost"
+    port: "5432"
+    db_name: "gorilladesk"
+    username: "admin"
+    password: "admin"
+    max_con: 64
+    max_idle_con: 32
+
+timer:
+  zone: "UTC"

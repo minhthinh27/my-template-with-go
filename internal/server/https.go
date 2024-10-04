@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"my-template-with-go/bootstrap"
 	"my-template-with-go/container"
+	"my-template-with-go/helper/gderror"
 	"my-template-with-go/internal/biz"
 	"my-template-with-go/internal/controller"
 	"my-template-with-go/internal/repo"
@@ -14,6 +15,7 @@ import (
 func Router(container container.IContainerProvider, cf bootstrap.Config) (*echo.Echo, error) {
 	router := echo.New()
 	router.Use(middleware.Recover())
+	router.HTTPErrorHandler = gderror.CustomHTTPErrorHandler
 	cors(router)
 
 	if cf.Server.Env.Mode != "PRODUCTION" {

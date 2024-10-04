@@ -1,4 +1,4 @@
-package nl_cron
+package gdcron
 
 type ICronApp interface {
 	Start() error

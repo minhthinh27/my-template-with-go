@@ -1,29 +1,29 @@
 package cron
 
 import (
+	"context"
 	"my-template-with-go/bootstrap"
-	"my-template-with-go/helper/nl_cron"
+	"my-template-with-go/helper/gdcron"
 	"my-template-with-go/internal/biz"
 	"my-template-with-go/logger"
+	"time"
 )
 
 type IArticleCron interface {
-	nl_cron.ICronJob
+	gdcron.ICronJob
 }
 
-func NewMailBoxCron(
-	cf bootstrap.Config,
-	zap logger.ILogger,
-	articleSync biz.IArticleUC,
-) (IArticleCron, func(), error) {
+func NewMailBoxCron(cf bootstrap.Config, zap logger.ILogger, articleSync biz.IArticleUC) (IArticleCron, func(), error) {
 	var (
 		zone  = cf.Timer.Zone
 		sugar = zap.GetZapLogger()
 	)
 
-	callback := func() { articleSync.Sync() }
+	callback := func(ctx context.Context) error {
+		return articleSync.Sync(ctx)
+	}
 
-	result := nl_cron.NewCronJob("article", "*/10 * * * * *", zone, callback, sugar)
+	result := gdcron.NewCronJob("article", "*/10 * * * * *", zone, callback, sugar, time.Minute)
 	return result, func() {
 		sugar.Info("closing the document nl_cron job")
 		result.Stop()

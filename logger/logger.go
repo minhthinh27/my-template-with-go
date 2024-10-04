@@ -5,6 +5,10 @@ import (
 	"my-template-with-go/bootstrap"
 )
 
+const (
+	EnvProduction = "PRODUCTION"
+)
+
 type ILogger interface {
 	GetZapLogger() *zap.SugaredLogger
 }
@@ -26,7 +30,6 @@ func InitLogger(config bootstrap.Config) (ILogger, error) {
 	}
 
 	log := NewLogger(zapLogger.Sugar())
-	log.GetZapLogger().Info("Success zap logger configuration")
 
 	return log, nil
 }
@@ -37,7 +40,7 @@ func build(config bootstrap.Config) (*zap.Logger, error) {
 	)
 
 	zapLogger, err := zap.NewDevelopment()
-	if env.Mode == "PRODUCTION" {
+	if env.Mode == EnvProduction {
 		zapLogger, err = zap.NewProduction()
 	}
 

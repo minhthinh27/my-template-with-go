@@ -1,8 +1,10 @@
 package bootstrap
 
 import (
+	"errors"
 	"fmt"
 	"github.com/spf13/viper"
+	"time"
 )
 
 type Config struct {
@@ -25,5 +27,19 @@ func InitConfig(configPath string) (Config, error) {
 		return config, err
 	}
 
+	if err := setTimeZone(config.Timer.Zone); err != nil {
+		return Config{}, err
+	}
+
 	return config, nil
+}
+
+func setTimeZone(timeZone string) error {
+	loc, err := time.LoadLocation(timeZone)
+	if err != nil {
+		return errors.New("load time zone failed: " + err.Error())
+	}
+
+	time.Local = loc
+	return nil
 }

@@ -1,4 +1,4 @@
-package nl_cron
+package gdcron
 
 import (
 	"context"
@@ -22,7 +22,7 @@ type job struct {
 	cron     *cron.Cron
 }
 
-func NewCronJob(name string, timer string, timezone string, callback func(), sugar *zap.SugaredLogger) ICronJob {
+func NewCronJob(name string, timer string, timezone string, callback func(ctx context.Context) error, sugar *zap.SugaredLogger, timeOut time.Duration) ICronJob {
 	loc := time.Now().Location()
 	if zone, err := time.LoadLocation(timezone); err == nil {
 		loc = zone
@@ -37,8 +37,12 @@ func NewCronJob(name string, timer string, timezone string, callback func(), sug
 
 	callLog := func() {
 		sugar.Infof("======= Job %s starting invoke at %s =======", name, time.Now().String())
-		callback()
-		sugar.Infof("======= Job %s completed invoke at %s =======", name, time.Now().String())
+		ctx, cancel := context.WithTimeout(context.Background(), timeOut)
+		defer cancel()
+
+		if err := callback(ctx); err == nil {
+			sugar.Infof("======= Job %s completed invoke at %s =======", name, time.Now().String())
+		}
 	}
 
 	timer = formatTimer(timer)
