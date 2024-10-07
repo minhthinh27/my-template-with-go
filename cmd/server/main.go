@@ -22,7 +22,7 @@ func main() {
 	provider := container.NewContainer(config, sugar)
 
 	migration.AutoMigrate(provider.DatabaseProvider().GetDBMain(), sugar.GetZapLogger())
-	router := server.InitRouter(provider, config)
+	router := server.InitRouter(provider, sugar, config)
 
 	server.Start(router, sugar, config.Server)
 }

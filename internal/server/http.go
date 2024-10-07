@@ -19,7 +19,7 @@ import (
 	"time"
 )
 
-func InitRouter(container container.IContainerProvider, cf bootstrap.Config) *echo.Echo {
+func InitRouter(container container.IContainerProvider, zap logger.ILogger, cf bootstrap.Config) *echo.Echo {
 	router := echo.New()
 	router.Use(middleware.Recover())
 	router.HTTPErrorHandler = gderror.CustomHTTPErrorHandler

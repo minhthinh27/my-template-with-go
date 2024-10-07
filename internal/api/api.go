@@ -9,8 +9,8 @@ import (
 	"my-template-with-go/internal/repo"
 )
 
-func RegisterV1Router(router *echo.Echo, container container.IContainerProvider, cf bootstrap.Config) {
-	articleRepo := repo.NewArticleRepo(container.DatabaseProvider())
+func RegisterV1Router(router *echo.Echo, provider container.IContainerProvider, cf bootstrap.Config) {
+	articleRepo := repo.NewArticleRepo(provider.DatabaseProvider())
 	articleUC := biz.NewArticleUseCase(articleRepo)
 	articleCtl := controller.NewArticleCtl(articleUC)
 
