@@ -1,16 +1,16 @@
 server:
   env:
-    mode: DEVELOP # or PRODUCTION
+    mode: develop
   http:
-    address: 8000
-    timeout: 10 # seconds
+    address: 9000
+    timeout: 10
 
 cache:
   redis:
     host: "localhost"
     port: "6379"
     password: ""
-    db: 1
+    db: 0
 
 database:
   main:

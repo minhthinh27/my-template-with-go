@@ -1,91 +1,28 @@
 package main
 
 import (
-	"context"
-	"errors"
-	"fmt"
-	"github.com/labstack/echo/v4"
-	"log"
+	"flag"
 	"my-template-with-go/bootstrap"
 	"my-template-with-go/container"
 	"my-template-with-go/internal/migration"
 	"my-template-with-go/internal/server"
 	"my-template-with-go/logger"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
 )
 
-var configPath = "./configs"
+var flagConf string
 
-func main() {
-	config, err := bootstrap.InitConfig(configPath)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	sugar, err := logger.InitLogger(config)
-	if err != nil {
-		sugar.GetZapLogger().Fatal(err)
-	}
-
-	provider, err := container.NewContainer(config, sugar)
-	if err != nil {
-		sugar.GetZapLogger().Fatal(err)
-	}
-
-	if err = migration.AutoMigrate(provider.DatabaseProvider().GetDBMain()); err != nil {
-		sugar.GetZapLogger().Fatal(err)
-	}
-
-	router, err := server.Router(provider, config)
-	if err != nil {
-		sugar.GetZapLogger().Fatal(err)
-	}
-
-	run(router, sugar, config.Server)
+func init() {
+	flag.StringVar(&flagConf, "conf", "./configs/config.yaml", "config path, eg: -conf config.yaml")
 }
 
-func run(engine *echo.Echo, zap logger.ILogger, cf bootstrap.Server) {
-	var (
-		sugar   = zap.GetZapLogger()
-		timeOut = time.Duration(cf.Http.Timeout) * time.Second
-		address = cf.Http.Address
-	)
+func main() {
+	flag.Parse()
+	config := bootstrap.InitConfig(flagConf)
+	sugar := logger.InitLogger(config)
+	provider := container.NewContainer(config, sugar)
 
-	// start and wait for stop signal
-	ctx, stop := signal.NotifyContext(
-		context.Background(),
-		os.Interrupt,
-		syscall.SIGINT,
-		syscall.SIGTERM,
-		syscall.SIGQUIT,
-	)
-	defer stop()
+	migration.AutoMigrate(provider.DatabaseProvider().GetDBMain(), sugar.GetZapLogger())
+	router := server.InitRouter(provider, config)
 
-	srv := &http.Server{
-		Addr:              fmt.Sprintf(":%s", address),
-		Handler:           engine,
-		ReadHeaderTimeout: timeOut,
-		ReadTimeout:       timeOut,
-		WriteTimeout:      timeOut,
-	}
-
-	go func() {
-		sugar.Infof("start server on: %s", srv.Addr)
-		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			sugar.Fatal(err)
-		}
-	}()
-	<-ctx.Done()
-	stop()
-
-	var cancel context.CancelFunc
-	ctx, cancel = context.WithTimeout(context.Background(), timeOut)
-	defer cancel()
-	if err := srv.Shutdown(ctx); err != nil {
-		sugar.Fatal(err)
-	}
+	server.Start(router, sugar, config.Server)
 }

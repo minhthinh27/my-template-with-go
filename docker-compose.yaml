@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  tga-service:
+    image: tga-service
+    container_name: go-tga-server
+    build:
+      args:
+        APP_ENV: ${APP_ENV}
+        APP_PORT: ${APP_PORT}
+      context: .
+      dockerfile: Dockerfile-sever
+    environment:
+        - APP_ENV=${APP_ENV}
+        - APP_PORT=${APP_PORT}
+    ports:
+      - ${APP_PORT}:${APP_PORT}

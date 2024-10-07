@@ -1,0 +1,26 @@
+FROM golang:latest AS builder
+
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . /src
+
+RUN mkdir -p bin/
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o ./bin/server ./cmd/server
+
+FROM debian:stable-slim
+
+COPY --from=builder /src/bin /app
+
+WORKDIR /app
+
+COPY ./configs ./configs
+
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+CMD ["./server"]
+

@@ -1,6 +1,6 @@
 server:
   env:
-    mode: DEVELOP
+    mode: develop
   http:
     address: 8000
     timeout: 10

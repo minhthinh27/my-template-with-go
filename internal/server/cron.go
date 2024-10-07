@@ -16,7 +16,7 @@ func NewCRONServer(
 	cf bootstrap.Config,
 ) (gdcron.ICronApp, func(), error) {
 	articleRepo := repo.NewArticleRepo(provider.DatabaseProvider())
-	articleUseCase := biz.NewArticleUseCase(articleRepo, nil)
+	articleUseCase := biz.NewArticleUseCase(articleRepo)
 
 	articleCron, cleanup, err := cron.NewMailBoxCron(cf, zap, articleUseCase)
 	if err != nil {

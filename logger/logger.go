@@ -2,11 +2,12 @@ package logger
 
 import (
 	"go.uber.org/zap"
+	"log"
 	"my-template-with-go/bootstrap"
 )
 
 const (
-	EnvProduction = "PRODUCTION"
+	EnvProduction = "production"
 )
 
 type ILogger interface {
@@ -17,21 +18,15 @@ type logger struct {
 	Zap *zap.SugaredLogger
 }
 
-func NewLogger(sugar *zap.SugaredLogger) ILogger {
-	return &logger{Zap: sugar}
-}
-
-func InitLogger(config bootstrap.Config) (ILogger, error) {
+func InitLogger(config bootstrap.Config) ILogger {
 	zapLogger, err := build(config)
 	defer zapLogger.Sync()
 
 	if err != nil {
-		return nil, err
+		log.Fatalf("Error init zap logger: %v", err)
 	}
 
-	log := NewLogger(zapLogger.Sugar())
-
-	return log, nil
+	return &logger{Zap: zapLogger.Sugar()}
 }
 
 func build(config bootstrap.Config) (*zap.Logger, error) {

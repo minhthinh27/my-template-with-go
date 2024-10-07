@@ -1,10 +1,11 @@
 package bootstrap
 
 import (
-	"errors"
-	"fmt"
-	"github.com/spf13/viper"
+	"log"
+	"sync"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -14,32 +15,36 @@ type Config struct {
 	Timer    Timer
 }
 
-func InitConfig(configPath string) (Config, error) {
-	viper.AddConfigPath(configPath)
-	viper.SetConfigFile(fmt.Sprintf("%s/config.yaml", configPath))
+var (
+	once           sync.Once
+	configInstance Config
+)
 
-	if err := viper.ReadInConfig(); err != nil {
-		panic(fmt.Errorf("Fatal error configs file: %w \n", err))
-	}
+func InitConfig(configPath string) Config {
+	once.Do(func() {
+		viper.SetConfigType("yaml")
+		viper.AddConfigPath(configPath)
+		viper.SetConfigFile(configPath)
 
-	var config Config
-	if err := viper.Unmarshal(&config); err != nil {
-		return config, err
-	}
+		if err := viper.ReadInConfig(); err != nil {
+			log.Fatalf("Error reading config file: %s", err)
+		}
 
-	if err := setTimeZone(config.Timer.Zone); err != nil {
-		return Config{}, err
-	}
+		if err := viper.Unmarshal(&configInstance); err != nil {
+			log.Fatalf("Error parsing config file: %s", err)
+		}
 
-	return config, nil
+		setTimeZone(configInstance.Timer.Zone)
+	})
+
+	return configInstance
 }
 
-func setTimeZone(timeZone string) error {
+func setTimeZone(timeZone string) {
 	loc, err := time.LoadLocation(timeZone)
 	if err != nil {
-		return errors.New("load time zone failed: " + err.Error())
+		log.Fatalf("Error loading timezone, %s", err)
 	}
 
 	time.Local = loc
-	return nil
 }
