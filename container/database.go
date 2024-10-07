@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-type IDatabaseProvider interface {
+type IDataBaseProvider interface {
 	GetDBMain() *gorm.DB
 	GetDBSlave() *gorm.DB
 }
@@ -24,7 +24,7 @@ type databaseProvider struct {
 	dbSlave *gorm.DB
 }
 
-func NewDatabase(config bootstrap.Database, sugar *zap.SugaredLogger) (IDatabaseProvider, func(), error) {
+func NewDatabase(config bootstrap.Database, sugar *zap.SugaredLogger) (IDataBaseProvider, func(), error) {
 	var (
 		data    = &databaseProvider{}
 		cfMain  = config.Main

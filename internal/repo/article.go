@@ -16,7 +16,7 @@ type IArticleRepo interface {
 }
 
 type articleRepo struct {
-	db container.IDatabaseProvider
+	db container.IDataBaseProvider
 }
 
 func (d *articleRepo) List() ([]*entity.Article, error) {
@@ -87,7 +87,7 @@ func (d *articleRepo) Delete(ids []uint) error {
 	return tx.Delete(&entity.Article{}, ids).Error
 }
 
-func NewArticleRepo(db container.IDatabaseProvider) IArticleRepo {
+func NewArticleRepo(db container.IDataBaseProvider) IArticleRepo {
 	return &articleRepo{
 		db: db,
 	}

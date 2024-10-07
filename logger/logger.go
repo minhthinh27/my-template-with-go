@@ -4,10 +4,7 @@ import (
 	"go.uber.org/zap"
 	"log"
 	"my-template-with-go/bootstrap"
-)
-
-const (
-	EnvProduction = "production"
+	"my-template-with-go/constant"
 )
 
 type ILogger interface {
@@ -35,7 +32,7 @@ func build(config bootstrap.Config) (*zap.Logger, error) {
 	)
 
 	zapLogger, err := zap.NewDevelopment()
-	if env.Mode == EnvProduction {
+	if env.Mode == constant.EnvProduction {
 		zapLogger, err = zap.NewProduction()
 	}
 
